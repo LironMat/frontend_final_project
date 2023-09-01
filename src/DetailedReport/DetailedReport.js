@@ -1,5 +1,5 @@
 import './DetailedReport.css';
 
 export default function DetailedReport() {
-  return <h1>hi</h1>;
+  return <h1>DetailedReport</h1>;
 }
