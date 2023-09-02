@@ -12,6 +12,7 @@ import { IDB } from '../idbModule';
 
 //{ sum: 200, category: 'HOUSING', description: 'rent for 01.2023', month: 7, year: 2022 }
 const categories = ['FOOD', 'HEALTH', 'EDUCATION', 'TRAVEL', 'HOUSING', 'OTHER'];
+const months = [1,2,3,4,5,6,7,8,9,10,11,12];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,41 +42,40 @@ export default function AddItemForm() {
     const[sumInput,setSumInput] = useState(0);
     const[categoryInput,setCategoryInput] = useState("FOOD");
     const[descriptionInput,setDescriptionInput] = useState(" ");
-    //const[month,setMonth] = useState(1);
-    //const[year,setYear] = useState(2023);
+    const[monthInput,setMonthInput] = useState(undefined);
+    const[yearInput,setYearInput] = useState(undefined);
 
-    async function test() {
+    async function handleAddItem() {
         /**
          * @type {DB}
          */
+        if(monthInput === undefined || yearInput === undefined) {
+            setMonthInput(undefined);
+            setYearInput(undefined);
+        }
+
         const db = await IDB.openCostsDB('costsdb', 1);
 
-        // const result1 = await db.addCost({
-        //     sum: 200,
-        //     category: 'HOUSING',
-        //     description: 'rent for 01.2023',
-        //     month: 7,
-        //     year: 2022
-        // });
+        const result = await db.addCost({
+            sum: sumInput,
+            category: categoryInput,
+            description: descriptionInput,
+            month: monthInput,
+            year: yearInput
+        });
         console.log(sumInput);
         console.log(categoryInput);
         console.log(descriptionInput);
+        if(result) {
+            alert("item added succesfully");
+        }
+        else {
+            alert("error adding item");
+        }
 
-        const result2 = await db.addCost({sum: sumInput, category: categoryInput, description: descriptionInput});
+        //const result2 = await db.addCost({sum: sumInput, category: categoryInput, description: descriptionInput});
     }
-    // async function handleClick() {
-    //     //const input = {{sum: sum,category: category, description: description}};
-    //     const db = await IDB.openCostsDB('costsdb', 1);
-    //     const result1 = await db.addCost(input);
-    //     if (db) {
-    //         console.log('creating db succeeded');
-    //     }
-    //
-    //     if (result1) {
-    //         console.log('adding 1st cost succeeded');
-    //     }
-    //
-    // }
+
     function handleSumChange(e) {
         //console.log(e.target.value);
         setSumInput(parseInt(e.target.value));
@@ -90,11 +90,21 @@ export default function AddItemForm() {
         console.log(e.target.value);
         setCategoryInput(e.target.value);
     }
+    function handleMonthChange(e) {
+        console.log(e.target.value);
+        setMonthInput(e.target.value);
+    }
+
+    function handleYearChange(e) {
+        if(parseInt(e.target.value)) {
+            setYearInput(parseInt(e.target.value));
+        }
+
+    }
 
   return(<div>
-
-
       <br/>
+      <FormControl normal>
           <TextField
               value={sumInput}
               onChange={handleSumChange}
@@ -105,6 +115,7 @@ export default function AddItemForm() {
                   shrink: true,
               }}
           />
+          <br/>
           <TextField
               value={descriptionInput}
               onChange={handleDescriptionChange}
@@ -114,6 +125,7 @@ export default function AddItemForm() {
               rows={4}
               defaultValue=""
           />
+          <br/>
       <FormControl normal>
       <InputLabel id="category-select-component">Category</InputLabel>
       <Select
@@ -134,11 +146,45 @@ export default function AddItemForm() {
               </MenuItem>
           ))}
       </Select>
-
-
-          
-          <Button onClick={(e) => test()} size="small" variant="outlined">Add Item</Button>
+          <br/>
       </FormControl>
+          <FormControl normal>
+              <InputLabel id="month-select-component">Month</InputLabel>
+              <Select
+                  labelId="month-select-component"
+                  id="month-select-component"
+                  value={monthInput}
+                  onChange={handleMonthChange}
+                  input={<OutlinedInput label="Month" />}
+                  MenuProps={MenuProps}
+              >
+                  {months.map((monthNumber) => (
+                      <MenuItem
+                          key={monthNumber}
+                          value={monthNumber}
+                          //style={getStyles(categoryName, category, theme)}
+                      >
+                          {monthNumber}
+                      </MenuItem>
+                  ))}
+              </Select>
+          </FormControl>
+          <br/>
+          <TextField
+              value={yearInput}
+              onChange={handleYearChange}
+              id="outlined-year"
+              label="Year"
+              type="number"
+              InputLabelProps={{
+                  shrink: true,
+              }}
+          />
+
+      </FormControl>
+          
+          <Button onClick={(e) => handleAddItem()} size="small" variant="outlined">Add Item</Button>
+
 
       </div>);
 }
