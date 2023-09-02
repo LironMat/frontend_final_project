@@ -3,7 +3,7 @@ import {useState} from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
-import {useTheme} from "@mui/material";
+import {FormLabel, useTheme} from "@mui/material";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -38,44 +38,65 @@ function getStyles(category, categoryName, theme) {
 export default function AddItemForm() {
 
     const theme = useTheme();
-    const[sum,setSum] = useState(0);
-    const[category,setCategory] = useState("FOOD");
-    const[description,setDescription] = useState(" ");
+    const[sumInput,setSumInput] = useState(0);
+    const[categoryInput,setCategoryInput] = useState("FOOD");
+    const[descriptionInput,setDescriptionInput] = useState(" ");
     //const[month,setMonth] = useState(1);
     //const[year,setYear] = useState(2023);
 
-    async function handleClick() {
-        const input = {sum: {sum},category: {category}, description: {description}};
+    async function test() {
+        /**
+         * @type {DB}
+         */
         const db = await IDB.openCostsDB('costsdb', 1);
-        const result1 = await db.addCost(input);
-        if (db) {
-            console.log('creating db succeeded');
-        }
 
-        if (result1) {
-            console.log('adding 1st cost succeeded');
-        }
+        // const result1 = await db.addCost({
+        //     sum: 200,
+        //     category: 'HOUSING',
+        //     description: 'rent for 01.2023',
+        //     month: 7,
+        //     year: 2022
+        // });
+        console.log(sumInput);
+        console.log(categoryInput);
+        console.log(descriptionInput);
 
+        const result2 = await db.addCost({sum: sumInput, category: categoryInput, description: descriptionInput});
     }
+    // async function handleClick() {
+    //     //const input = {{sum: sum,category: category, description: description}};
+    //     const db = await IDB.openCostsDB('costsdb', 1);
+    //     const result1 = await db.addCost(input);
+    //     if (db) {
+    //         console.log('creating db succeeded');
+    //     }
+    //
+    //     if (result1) {
+    //         console.log('adding 1st cost succeeded');
+    //     }
+    //
+    // }
     function handleSumChange(e) {
         //console.log(e.target.value);
-        setSum(e.target.value);
+        setSumInput(parseInt(e.target.value));
     }
 
     function handleDescriptionChange(e) {
         //console.log(e.target.value);
-        setDescription(e.target.value);
+        setDescriptionInput(e.target.value);
     }
 
     function handleCategoryChange(e) {
         console.log(e.target.value);
-        setCategory(e.target.value);
+        setCategoryInput(e.target.value);
     }
 
   return(<div>
+
+
       <br/>
           <TextField
-              value={sum}
+              value={sumInput}
               onChange={handleSumChange}
               id="outlined-sum"
               label="Sum"
@@ -85,7 +106,7 @@ export default function AddItemForm() {
               }}
           />
           <TextField
-              value={description}
+              value={descriptionInput}
               onChange={handleDescriptionChange}
               id="outlined-multiline-static"
               label="Details"
@@ -98,7 +119,7 @@ export default function AddItemForm() {
       <Select
           labelId="category-select-component"
           id="category-select-component"
-          value={category}
+          value={categoryInput}
           onChange={handleCategoryChange}
           input={<OutlinedInput label="Category" />}
           MenuProps={MenuProps}
@@ -113,10 +134,11 @@ export default function AddItemForm() {
               </MenuItem>
           ))}
       </Select>
-      </FormControl>
+
 
           
-          <Button onClick={(e) => handleClick()} size="small" variant="outlined">Add Item</Button>
+          <Button onClick={(e) => test()} size="small" variant="outlined">Add Item</Button>
+      </FormControl>
 
       </div>);
 }
