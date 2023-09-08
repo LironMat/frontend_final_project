@@ -27,7 +27,7 @@ class IDB {
 
         const costsStore = db.createObjectStore(DB.costsStoreName, {
           keyPath: 'id',
-          autoIncrement: true
+          autoIncrement: true,
         });
 
         costsStore.createIndex('sum', 'sum', { unique: false });
@@ -87,7 +87,7 @@ class DB {
         category: cost.category,
         description: cost.description,
         year: cost.year,
-        month: cost.month
+        month: cost.month,
       });
 
       addRequest.onsuccess = () => {
