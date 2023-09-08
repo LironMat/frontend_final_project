@@ -4,14 +4,21 @@ import { IDB } from '../idbModule';
 
 export default function Testing() {
   async function test() {
-    /**
-     * @type {DB}
-     */
     const db = await IDB.openCostsDB('costsdb', 1);
 
-    const result1 = await db.addCost({ sum: 200, category: 'HOUSING', description: 'rent for 01.2023', month: 7, year: 2022 });
+    const result1 = await db.addCost({
+      sum: 200,
+      category: 'HOUSING',
+      description: 'rent for 01.2023',
+      month: 7,
+      year: 2022,
+    });
 
-    const result2 = await db.addCost({ sum: 300, category: 'FOOD', description: 'food for weekend' });
+    const result2 = await db.addCost({
+      sum: 300,
+      category: 'FOOD',
+      description: 'food for weekend',
+    });
 
     if (db) {
       console.log('creating db succeeded');

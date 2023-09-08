@@ -3,7 +3,7 @@ class IDB {
    *
    * @param {string} name
    * @param {number} version
-   * @returns {Promise<DB|DOMException>}
+   * @returns {Promise<DB>}
    */
   static openCostsDB(name, version) {
     if (typeof name !== 'string' || typeof version !== 'number') {
