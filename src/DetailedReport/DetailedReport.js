@@ -1,96 +1,107 @@
 import './DetailedReport.css';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { useState } from 'react';
 import {
-  List,
-  ListItem,
-  ListItemText,
   Button,
-  Divider,
   FormControl,
   Typography,
+  TextField,
+  TableCell,
+  TableRow,
+  TableHead,
+  Table,
+  TableContainer,
+  TableBody,
 } from '@mui/material';
 import { IDB } from '../idbModule';
+import { format } from 'date-fns';
 
 export default function DetailedReport() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [reportData, setReportData] = useState([]);
-  const [reportDate, setReportDate] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [yearMonthValue, setYearMonthValue] = useState(format(new Date(), 'yyyy-MM'));
+  const [reportData, setReportData] = useState({
+    data: [],
+    date: yearMonthValue,
+    errorMessage: '',
+  });
 
-  async function handleDateChange(newDate) {
-    setSelectedDate(newDate);
+  function handleYearMonthChange(e) {
+    setYearMonthValue(e.target.value);
   }
 
   async function fetchReportData() {
     try {
       const db = await IDB.openCostsDB('costsdb', 1);
 
-      const year = selectedDate.getFullYear();
-      const month = selectedDate.getMonth() + 1; // Months are 0-indexed, so add 1
+      const [year, month] = (yearMonthValue || format(new Date(), 'yyyy-MM'))
+        .split('-')
+        .map((split) => parseInt(split));
+
       const data = await db.getDetailedReport(month, year);
       if (data.length === 0) {
-        setErrorMessage('No reports for selected date');
+        setReportData({
+          data: null,
+          date: yearMonthValue,
+          errorMessage: 'No reports for selected date',
+        });
       } else {
-        setErrorMessage('');
-        setReportData(data);
-        setReportDate(selectedDate);
+        setReportData({ data: data, date: yearMonthValue, errorMessage: '' });
       }
     } catch (error) {
       console.error('Error fetching report data:', error);
-      setErrorMessage('An error occurred while fetching the report data.');
+      return false;
     }
   }
 
+  const tableHeaders = ['Sum', 'Category', 'Description'];
+
   return (
     <div className="form-container">
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <FormControl margin="normal">
-          <DatePicker
-            views={['year', 'month']}
-            label="Select Month and Year"
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-          <Button variant="contained" color="primary" onClick={fetchReportData}>
-            Fetch Report
-          </Button>
-        </FormControl>
-        {errorMessage && (
-          <Typography color="error" align="center">
-            {errorMessage}
+      <FormControl margin="normal">
+        <TextField
+          value={yearMonthValue}
+          onChange={handleYearMonthChange}
+          label="Year & Month"
+          type="month"
+        />
+      </FormControl>
+
+      <Button variant="contained" color="primary" onClick={fetchReportData}>
+        Fetch Report
+      </Button>
+
+      {reportData.errorMessage && (
+        <Typography color="error" align="center">
+          {reportData.errorMessage}
+        </Typography>
+      )}
+
+      {!reportData.errorMessage && reportData.data.length > 0 && (
+        <div>
+          <Typography color="green" align="center">
+            Showing results for {reportData.date}
           </Typography>
-        )}
-        {!errorMessage && reportData.length > 0 && (
-          <div>
-            <Typography color="green" align="center">
-              Showing results for{' '}
-              {reportDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-            </Typography>
-            <List>
-              {reportData.map((report, index) => (
-                <div key={index}>
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        <Typography component="div">
-                          Sum: {report.sum}
-                          <br />
-                          Category: {report.category}
-                          <br />
-                          Description: {report.description}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                  {index < reportData.length - 1 && <Divider />}
-                </div>
-              ))}
-            </List>
-          </div>
-        )}
-      </LocalizationProvider>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {tableHeaders.map((header) => (
+                    <TableCell key={header}>{header}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {reportData.data.map((report, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{report.sum}</TableCell>
+                    <TableCell>{report.category}</TableCell>
+                    <TableCell>{report.description}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
     </div>
   );
 }
