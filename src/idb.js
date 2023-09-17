@@ -64,7 +64,7 @@ class DB {
       const now = new Date();
 
       cost.year = now.getFullYear();
-      cost.month = now.getMonth();
+      cost.month = now.getMonth() + 1;
     }
 
     if (
