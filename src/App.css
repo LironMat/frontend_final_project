@@ -6,9 +6,18 @@ body {
 
 .host {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  height: 100%;
 }
 
-.host > * {
-  flex: 1 0 auto;
+.tab-content {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1 auto;
+}
+
+nav.header {
+  display: flex;
+  flex-direction: row;
 }

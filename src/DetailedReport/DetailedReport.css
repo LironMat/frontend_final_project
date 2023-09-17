@@ -1,0 +1,14 @@
+.detailed-report-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-row > * {
+  margin-inline-end: 1vh !important;
+}

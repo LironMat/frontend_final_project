@@ -1,4 +1,6 @@
-.form-container {
+.add-item-container {
   display: flex;
   flex-direction: column;
+  width: 50%;
+  align-self: center;
 }

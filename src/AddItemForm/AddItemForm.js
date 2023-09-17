@@ -11,15 +11,17 @@ import { DB, IDB } from '../idbModule';
 import { format } from 'date-fns';
 
 export default function AddItemForm() {
+  const currentYearMonthString = format(new Date(), 'yyyy-MM');
+
   const [sumInput, setSumInput] = useState(0);
   const [categoryInput, setCategoryInput] = useState(DB.costCategories[0]);
   const [descriptionInput, setDescriptionInput] = useState('');
-  const [yearMonthValue, setYearMonthValue] = useState(format(new Date(), 'yyyy-MM'));
+  const [yearMonthValue, setYearMonthValue] = useState(currentYearMonthString);
 
   async function handleAddItem() {
     const db = await IDB.openCostsDB('costsdb', 1);
 
-    const [year, month] = (yearMonthValue || format(new Date(), 'yyyy-MM'))
+    const [year, month] = (yearMonthValue || currentYearMonthString)
       .split('-')
       .map((split) => parseInt(split));
 
@@ -62,7 +64,7 @@ export default function AddItemForm() {
   }
 
   return (
-    <div className="form-container">
+    <div className="add-item-container">
       <FormControl margin="normal">
         <TextField value={sumInput} onChange={handleSumChange} label="Sum" type="number" />
       </FormControl>
