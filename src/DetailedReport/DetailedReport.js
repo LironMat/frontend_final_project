@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { IDB } from '../idbModule';
 import { format } from 'date-fns';
+import { DataGrid } from '@mui/x-data-grid';
 
 export default function DetailedReport() {
   const [yearMonthValue, setYearMonthValue] = useState(format(new Date(), 'yyyy-MM'));
@@ -53,7 +54,12 @@ export default function DetailedReport() {
     }
   }
 
-  const tableHeaders = ['Sum', 'Category', 'Description'];
+  const tableHeaders = [
+    { field: 'id', headerName: '#', headerAlign: 'center' },
+    { field: 'sum', headerName: 'Sum', headerAlign: 'center' },
+    { field: 'category', headerName: 'Category', width: 300, headerAlign: 'center' },
+    { field: 'description', headerName: 'Description', width: 1000, headerAlign: 'center' },
+  ];
 
   return (
     <div className="detailed-report-container">
@@ -81,28 +87,24 @@ export default function DetailedReport() {
       </div>
 
       {!reportData.errorMessage && reportData.data.length > 0 && (
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                {tableHeaders.map((header) => (
-                  <TableCell key={header}>{header}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {reportData.data.map((report, index) => (
-                <TableRow key={index}>
-                  <TableCell style={{ fontWeight: 'bolder' }}>{index}</TableCell>
-                  <TableCell>{report.sum}</TableCell>
-                  <TableCell>{report.category}</TableCell>
-                  <TableCell style={{ whiteSpace: 'pre-line' }}>{report.description}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataGrid
+          rows={reportData.data.map((report, index) => ({
+            id: index,
+            sum: report.sum,
+            category: report.category,
+            description: report.description,
+          }))}
+          columns={tableHeaders}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+        />
       )}
     </div>
   );
