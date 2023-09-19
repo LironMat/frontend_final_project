@@ -21,6 +21,7 @@ export default function AddItemForm() {
   async function handleAddItem() {
     const db = await IDB.openCostsDB('costsdb', 1);
 
+    // Parse year and month from input
     const [year, month] = (yearMonthValue || currentYearMonthString)
       .split('-')
       .map((split) => parseInt(split));

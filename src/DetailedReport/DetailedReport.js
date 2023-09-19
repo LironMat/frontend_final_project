@@ -21,6 +21,7 @@ export default function DetailedReport() {
     try {
       const db = await IDB.openCostsDB('costsdb', 1);
 
+      // Parse year and month from input
       const [year, month] = (yearMonthValue || format(new Date(), 'yyyy-MM'))
         .split('-')
         .map((split) => parseInt(split));
