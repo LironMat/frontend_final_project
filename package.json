@@ -20,7 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +46,8 @@
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.33.2"
-  }
+    "eslint-plugin-react": "^7.33.2",
+    "gh-pages": "^6.0.0"
+  },
+  "homepage": "https://lironmat.github.io/frontend_final_project"
 }
