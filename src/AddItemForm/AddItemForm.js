@@ -104,7 +104,7 @@ export default function AddItemForm() {
         />
       </FormControl>
 
-      <Button onClick={(e) => handleAddItem()} size="small" variant="contained">
+      <Button onClick={() => handleAddItem()} size="small" variant="contained">
         Add Item
       </Button>
     </div>

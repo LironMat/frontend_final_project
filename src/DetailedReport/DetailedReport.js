@@ -1,20 +1,9 @@
 import './DetailedReport.css';
 import { useState } from 'react';
-import {
-  Button,
-  FormControl,
-  Typography,
-  TextField,
-  TableCell,
-  TableRow,
-  TableHead,
-  Table,
-  TableContainer,
-  TableBody,
-} from '@mui/material';
+import { Button, FormControl, Typography, TextField } from '@mui/material';
 import { IDB } from '../idbModule';
 import { format } from 'date-fns';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 export default function DetailedReport() {
   const [yearMonthValue, setYearMonthValue] = useState(format(new Date(), 'yyyy-MM'));
@@ -54,11 +43,25 @@ export default function DetailedReport() {
     }
   }
 
+  /**
+   * @type {GridColDef<any>[]}
+   */
   const tableHeaders = [
-    { field: 'id', headerName: '#', headerAlign: 'center' },
-    { field: 'sum', headerName: 'Sum', headerAlign: 'center' },
-    { field: 'category', headerName: 'Category', width: 300, headerAlign: 'center' },
-    { field: 'description', headerName: 'Description', width: 1000, headerAlign: 'center' },
+    {
+      field: 'index',
+      headerName: '#',
+      headerAlign: 'left',
+      cellClassName: 'bold',
+      headerClassName: 'bold',
+    },
+    { field: 'sum', headerName: 'Sum', headerAlign: 'left' },
+    { field: 'category', headerName: 'Category', flex: 1, headerAlign: 'left' },
+    {
+      field: 'description',
+      headerName: 'Description',
+      flex: 5,
+      headerAlign: 'left',
+    },
   ];
 
   return (
@@ -89,10 +92,8 @@ export default function DetailedReport() {
       {!reportData.errorMessage && reportData.data.length > 0 && (
         <DataGrid
           rows={reportData.data.map((report, index) => ({
-            id: index,
-            sum: report.sum,
-            category: report.category,
-            description: report.description,
+            index,
+            ...report,
           }))}
           columns={tableHeaders}
           initialState={{

@@ -1,6 +1,7 @@
 .detailed-report-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .flex-row {
@@ -11,4 +12,8 @@
 
 .flex-row > * {
   margin-inline-end: 1vh !important;
+}
+
+.bold {
+  font-weight: bold;
 }
