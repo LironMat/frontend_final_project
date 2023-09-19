@@ -1,3 +1,9 @@
+/*
+ Liron Matarasso 209227263
+ Valeria Zagorchik 323328872
+ Tzach Fleischer 305152969
+*/
+
 import './App.css';
 import AddItemForm from './AddItemForm/AddItemForm';
 import DetailedReport from './DetailedReport/DetailedReport';

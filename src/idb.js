@@ -1,3 +1,9 @@
+/*
+ Liron Matarasso 209227263
+ Valeria Zagorchik 323328872
+ Tzach Fleischer 305152969
+*/
+
 class IDB {
   /**
    * Open a cost db in the indexedDB
